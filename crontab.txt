@@ -1,0 +1,2 @@
+*/5 * * * * /u/jthurst3/Projects/csug-ci/computer-info.sh
+

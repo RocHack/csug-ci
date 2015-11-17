@@ -46,3 +46,15 @@
 #           chrome, firefox, tmux, screen, zsh, vim, emacs, gedit, sublime,
 #           atom, (TODO - other editors?), (TODO - other programs?)
 # Blank line
+
+# for now:
+# <number of users> <list of users>
+
+# from http://stackoverflow.com/questions/59895/can-a-bash-script-tell-what-directory-its-stored-in
+dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+folder="computers"
+cd $dir
+computer=$(hostname -s)
+users=$(users | tr ' ' '\n' | sort -u)
+number=$(echo $users | wc -l)
+echo "$number $users" >> "$folder/$computer.txt"
