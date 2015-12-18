@@ -45,21 +45,7 @@
 #  at least a minute
 # *** A process that is using over 1GB of memory
 
-user_info()
-{
-    echo "$1"
-    (
-        user_n_logins "$1"
-        user_lock_programs "$1"
-        user_n_zombies "$1"
-        user_pgrms "$1"
-        user_n_procs "$1"
-        user_n_threads "$1"
-        user_threads "$1"
-        user_cpu_procs "$1"
-        user_mem_procs "$1"
-    ) | indent
-}
+current_date=$(date +%s)
 
 do_indent()
 {
@@ -233,12 +219,12 @@ computer_info()
     done | indent
 }
 
-out="$(date +%s; computer_info | indent)"
+out="$(echo ${current_date}; computer_info | indent)"
 
 case "$1" in
     (--file)
         dir="$HOME/.computer-info"
-        file="$dir/$(computer_name)__$(date +%s)-$RANDOM.txt"
+        file="$dir/$(computer_name)__${current_date}.txt"
         xz <<<"$out" >"$file"
         touch "$file.done"
         ;;
