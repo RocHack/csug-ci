@@ -220,13 +220,26 @@ computer_info()
 }
 
 out="$(echo ${current_date}; computer_info | indent)"
+dir="$HOME/.computer-info"
 
 case "$1" in
     (--file)
-        dir="$HOME/.computer-info"
-        file="$dir/$(computer_name)__${current_date}.txt"
-        xz <<<"$out" >"$file"
+        file="$dir/$(computer_name)-${current_date}.txt"
+        xz <<<"$out" >"$file.xz"
         touch "$file.done"
+        ;;
+
+    (--daemon)
+        main_file="$dir/$(computer_name).txt.xz"
+        while sleep 300; do
+            files="$(find "$dir" -name "$(computer_name)-*.txt.done" | sort)"
+            files="${files//.done/}"
+            for file in $files; do
+                (xz -cd "$main_file"; xz -cd "$file.xz") \
+                    | xz >tmp && mv tmp "$main_file"
+                rm "$file.xz" "$file.done"
+            done
+        done
         ;;
 
     (*)
