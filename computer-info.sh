@@ -235,8 +235,8 @@ case "$1" in
             files="$(find "$dir" -name "$(computer_name)-*.txt.done" | sort)"
             files="${files//.done/}"
             for file in $files; do
-                (xz -cd "$main_file"; xz -cd "$file.xz") \
-                    | xz >tmp && mv tmp "$main_file"
+                (xz -cd "$main_file"; xz -cd "$file.xz") | \
+                    xz >"$dir/tmp" && mv "$dir/tmp" "$main_file"
                 rm "$file.xz" "$file.done"
             done
         done
