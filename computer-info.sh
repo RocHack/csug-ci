@@ -40,7 +40,7 @@
 #       For each memory-heavy process:
 #           Mem usage (kB) <SPACE> Secs since start <SPACE> Cmd line
 #
-#   * A process with >15 threads
+#   * A process with >=100 threads
 #  ** A process that has an avg CPU usage of over 90%, and has been running for
 #  at least a minute
 # *** A process that is using over 1GB of memory
@@ -154,7 +154,7 @@ user_n_threads()
 user_threads()
 {
     local threads n
-    threads="$(ps -u "$1" -o nlwp,etimes,cmd --no-headers | awk '$1 > 15' | \
+    threads="$(ps -u "$1" -o nlwp,etimes,cmd --no-headers | awk '$1 >= 100' | \
         trim)"
     n="$(wc -l <<<"$threads")"
     if [ -n "$threads" ]; then
