@@ -230,7 +230,13 @@ case "$1" in
         ;;
 
     (--daemon)
+        mkdir -p "$dir"
         main_file="$dir/$(computer_name).txt.xz"
+        if [[ ! -f "$main_file" ]]; then
+            txt_file="$(sed 's/\.xz$//' <<<"$main_file")"
+            touch "$txt_file"
+            xz "$txt_file"
+        fi
         while sleep 300; do
             files="$(find "$dir" -name "$(computer_name)-*.txt.done" | sort)"
             files="${files//.done/}"
