@@ -28,6 +28,7 @@
 #           sublime 8
 #           tmux    9
 #           screen  a
+#           nano    b
 #       Number of processes
 #       Number of threads
 #       Number of thread-heavy processes*
@@ -133,6 +134,7 @@ user_pgrms()
     grep -q '^subl$'    <<<"$comms" && pgrms="$pgrms 8"
     grep -q '^tmux$'    <<<"$comms" && pgrms="$pgrms 9"
     grep -q '^screen$'  <<<"$comms" && pgrms="$pgrms a"
+    grep -q '^nano$'    <<<"$comms" && pgrms="$pgrms b"
     echo $pgrms
 }
 
