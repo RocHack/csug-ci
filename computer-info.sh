@@ -11,6 +11,7 @@
 #   1-min-load-avg 5-min-load-avg 15-min-load-avg
 #   Available memory (kB)
 #   Number of unique users
+#   Number of listed users
 #   For each unique user:
 #       Username
 #       Number of times logged in (to same computer at same time)
@@ -26,9 +27,9 @@
 #           emacs   6
 #           gedit   7
 #           sublime 8
-#           tmux    9
-#           screen  a
-#           nano    b
+#           nano    9
+#           tmux    a
+#           screen  b
 #       Number of processes
 #       Number of threads
 #       Number of thread-heavy processes*
@@ -49,17 +50,12 @@
 current_date=$(date +%s)
 computer_name="$(hostname -s)"
 
-do_indent()
+indent()
 {
     local line
     while IFS= read -r line; do
         printf '\t%s\n' "$line"
     done
-}
-
-indent()
-{
-    do_indent
 }
 
 computer_uptime()
@@ -83,7 +79,6 @@ mem_avail()
 }
 
 users="$(users | tr ' ' '\n')"
-uniq_users="$(sort -u <<< "$users")"
 
 # $1 should be the username for all user_* functions
 
@@ -123,9 +118,9 @@ user_pgrms()
     grep -q '^emacs$'   <<<"$comms" && pgrms="$pgrms 6"
     grep -q '^gedit$'   <<<"$comms" && pgrms="$pgrms 7"
     grep -q '^subl$'    <<<"$comms" && pgrms="$pgrms 8"
-    grep -q '^tmux$'    <<<"$comms" && pgrms="$pgrms 9"
-    grep -q '^screen$'  <<<"$comms" && pgrms="$pgrms a"
-    grep -q '^nano$'    <<<"$comms" && pgrms="$pgrms b"
+    grep -q '^nano$'    <<<"$comms" && pgrms="$pgrms 9"
+    grep -q '^tmux$'    <<<"$comms" && pgrms="$pgrms a"
+    grep -q '^screen$'  <<<"$comms" && pgrms="$pgrms b"
     echo $pgrms
 }
 
@@ -203,11 +198,14 @@ user_info()
 
 computer_info()
 {
+    local running_users
     computer_uptime
     load_avgs
     mem_avail
-    echo $(wc -l <<<"$uniq_users")
-    for user in $uniq_users; do
+    sort -u <<<"$users" | wc -l
+    running_users="$(grep -Ff <(ps -o user -e --no-headers | sort -u) <(ls /u/))"
+    wc -l <<<"$running_users"
+    for user in $running_users; do
         user_info "$user"
     done | indent
 }
