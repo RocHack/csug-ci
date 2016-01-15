@@ -47,6 +47,7 @@
 # *** A process that is using over 1GB of memory
 
 current_date=$(date +%s)
+computer_name="$(hostname -s)"
 
 do_indent()
 {
@@ -61,11 +62,6 @@ indent()
     do_indent
 }
 
-computer_name()
-{
-    hostname -s
-}
-
 computer_uptime()
 {
     echo $(($(date +%s) - $(date -d "$(uptime -s)" +%s)))
@@ -74,11 +70,6 @@ computer_uptime()
 load_avgs()
 {
     uptime | awk -F'[,:] ' '{print $(NF-2), $(NF-1), $NF}'
-}
-
-meminfo()
-{
-    awk -F':? +' "\$1 == \"$1\" {print \$2}" /proc/meminfo
 }
 
 meminfo()
@@ -226,26 +217,30 @@ dir="$HOME/.computer-info"
 
 case "$1" in
     (--file)
-        file="$dir/$(computer_name)-${current_date}.txt"
-        xz <<<"$out" >"$file.xz"
+        file="$dir/$computer_name-${current_date}.txt"
+        printf "%s\n" "$out" >"$file"
         touch "$file.done"
         ;;
 
     (--daemon)
         mkdir -p "$dir"
-        main_file="$dir/$(computer_name).txt.xz"
+        cd "$dir"
+        main_file="$computer_name.txt.xz"
         if [[ ! -f "$main_file" ]]; then
-            txt_file="$(sed 's/\.xz$//' <<<"$main_file")"
+            txt_file="$computer_name.txt"
             touch "$txt_file"
             xz "$txt_file"
+        else
+            ./analyze-computer-info compress "$computer_name"
         fi
+        tmp_file="$computer_name-tmp"
         while sleep 300; do
-            files="$(find "$dir" -name "$(computer_name)-*.txt.done" | sort)"
-            files="${files//.done/}"
+            files="$(find -name "$computer_name-*.txt.done" | sort \
+                | sed 's/\.done$//')"
             for file in $files; do
-                (xz -cd "$main_file"; xz -cd "$file.xz") | \
-                    xz >"$dir/tmp" && mv "$dir/tmp" "$main_file"
-                rm "$file.xz" "$file.done"
+                (xz -cd "$main_file"; cat "$file") | \
+                    xz >"$tmp_file" && mv "$tmp_file" "$main_file"
+                rm "$file" "$file.done"
             done
         done
         ;;

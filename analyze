@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+set -e
+
+cd ~/.computer-info
+
+cmd="./analyze.py"
+files="$(find -name '*.txt.xz' -a '!' -name '*-*')"
+for file in $files; do
+    cmd="$cmd $(sed 's|.*/||; s|\..*||' <<<"$file") <(xz -cd $file)"
+done
+cmd="$cmd -- $@"
+
+eval "$cmd"
