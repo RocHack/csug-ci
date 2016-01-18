@@ -12,9 +12,9 @@
 #   Available memory (kB)
 #   Number of unique users
 #   Number of listed users
-#   For each unique user:
+#   For each listed user:
 #       Username
-#       Number of times logged in (to same computer at same time)
+#       Displays and TTYs
 #       Screensaver programs
 #       Number of zombies
 #       Interesting programs:
@@ -78,13 +78,11 @@ mem_avail()
     meminfo MemAvailable
 }
 
-users="$(users | tr ' ' '\n')"
-
 # $1 should be the username for all user_* functions
 
-user_n_logins()
+user_logins()
 {
-    grep -Fc "$1" <<< "$users"
+    who | awk '$1 == "'$1'" {print $2}' | sort -u | grep -v pts
 }
 
 user_lock_programs()
@@ -184,7 +182,7 @@ user_info()
 {
     echo "$1"
     (
-        user_n_logins "$1"
+        user_logins "$1"
         user_lock_programs "$1"
         user_n_zombies "$1"
         user_pgrms "$1"
@@ -202,7 +200,7 @@ computer_info()
     computer_uptime
     load_avgs
     mem_avail
-    sort -u <<<"$users" | wc -l
+    users | tr ' ' '\n' | sort -u | wc -l
     running_users="$(grep -Ff <(ps -o user -e --no-headers | sort -u) <(ls /u/))"
     wc -l <<<"$running_users"
     for user in $running_users; do
