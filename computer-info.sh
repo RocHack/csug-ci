@@ -229,7 +229,7 @@ case "$1" in
         else
             ./analyze-computer-info compress "$computer_name"
         fi
-        tmp_file="$computer_name-tmp"
+        tmp_file="$computer_name-tmp.txt"
         while sleep 300; do
             files="$(find -name "$computer_name-*.txt.done" | sort \
                 | sed 's/\.done$//')"
