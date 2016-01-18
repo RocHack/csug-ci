@@ -82,7 +82,7 @@ mem_avail()
 
 user_logins()
 {
-    who | awk '$1 == "'$1'" {print $2}' | sort -u | grep -v pts
+    who | awk '$1 == "'$1'" {print $2}' | sort -u | tr '\n' ' '
 }
 
 user_lock_programs()
