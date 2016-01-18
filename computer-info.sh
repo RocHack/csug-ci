@@ -236,6 +236,7 @@ case "$1" in
             for file in $files; do
                 (xz -cd "$main_file"; cat "$file") | \
                     xz >"$tmp_file" && mv "$tmp_file" "$main_file"
+                cp "$file" "$computer_name-current.txt"
                 rm "$file" "$file.done"
             done
         done
