@@ -167,6 +167,7 @@ def exec_cmd(cmd, info):
         cmd_compress(info)
 
 def main():
+    return
     cmd, info = parse_args(sys.argv)
     exec_cmd(cmd, info)
 
