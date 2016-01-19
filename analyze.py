@@ -78,7 +78,7 @@ pgrm_map = {
 
 def parse_interesting_pgrms(f, user):
     line = read_line(f)
-    user['pgrms'] = map(lambda x: pgrm_map[x], ' '.split(line))
+    user['pgrms'] = map(lambda x: pgrm_map[x], line.split(' '))
 
 def parse_user(f, prev, datum):
     user = {}
@@ -86,14 +86,13 @@ def parse_user(f, prev, datum):
     username = line
     user['username'] = username
     line = read_line(f)
-    logins = int(line)
-    if prev is not None and logins < 0:
+    if prev is not None and line == "-1":
         user = prev['users'][username]
         datum['users'][username] = user
         return
-    user['logins'] = int(line)
+    user['logins'] = line.split(' ')
     line = read_line(f)
-    user['screensavers'] = ' '.split(line)
+    user['screensavers'] = line.split(' ')
     line = read_line(f)
     user['zombies'] = int(line)
     parse_interesting_pgrms(f, user, datum)
@@ -106,7 +105,7 @@ def parse_user(f, prev, datum):
     user['thread_procs'] = []
     for i in range(n_thread_procs):
         line = read_line(f)
-        array = ' '.split(line)
+        array = line.split(' ')
         user['thread_procs'].append({
             'n_threads': int(array[0]),
             'secs': int(array[1]),
@@ -117,7 +116,7 @@ def parse_user(f, prev, datum):
     user['cpu_procs'] = []
     for i in range(n_cpu_procs):
         line = read_line(f)
-        array = ' '.split(line)
+        array = line.split(' ')
         user['cpu_procs'].append({
             'avg_cpu': int(array[0]),
             'secs': int(array[1]),
@@ -128,7 +127,7 @@ def parse_user(f, prev, datum):
     user['mem_procs'] = []
     for i in range(n_mem_procs):
         line = read_line(f)
-        array = ' '.split(line)
+        array = line.split(' ')
         user['mem_procs'].append({
             'mem_usage': int(array[0]),
             'secs': int(array[1]),
@@ -144,7 +143,7 @@ def parse_computer(f, prev, datum):
     line = read_line(f)
     datum['uptime'] = int(line)
     line = read_line(f)
-    loads = ' '.split(line)
+    loads = line.split(' ')
     datum['load_avgs'] = (Decimal(loads[0]), Decimal(loads[1]),
             Decimal(loads[2]))
     line = read_line(f)
@@ -189,8 +188,8 @@ def compress_computer(computer, f):
     data = load_all(f)
 
 def cmd_compress(info):
-    for computer in info.computers:
-        compress_computer(computer, info.files[computer])
+    for computer in info['computers']:
+        compress_computer(computer, info['files'][computer])
 
 def exec_cmd(cmd, info):
     if cmd == "compress":
