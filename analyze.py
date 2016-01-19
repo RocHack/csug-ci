@@ -219,7 +219,6 @@ def exec_cmd(cmd, info):
         sys.exit(1)
 
 def main():
-    return
     cmd, info = parse_args(sys.argv)
     exec_cmd(cmd, info)
 
