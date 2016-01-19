@@ -157,7 +157,7 @@ user_cpu_procs()
 {
     local procs n
     procs="$(ps -u "$1" -o %cpu,etimes,cmd --no-headers | \
-        awk '$1 > 90 && $2 > 60 {$2=""; print}' | trim)"
+        awk '$1 > 90 && $2 > 60' | trim)"
     n="$(wc -l <<<"$procs")"
     if [ -n "$procs" ]; then
         echo $n
