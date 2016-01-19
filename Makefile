@@ -1,6 +1,11 @@
 .PHONY: all
 all:
 
+.PHONY: run
+run: install
+	bgrun ~/.computer-info/computer-info --daemon
+	./install-crontab.sh
+
 .PHONY: install
 install:
 	mkdir -p ~/.computer-info
