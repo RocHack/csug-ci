@@ -95,7 +95,7 @@ def parse_user(f, prev, datum):
     user['screensavers'] = line.split(' ')
     line = read_line(f)
     user['zombies'] = int(line)
-    parse_interesting_pgrms(f, user, datum)
+    parse_interesting_pgrms(f, user)
     line = read_line(f)
     user['processes'] = int(line)
     line = read_line(f)
