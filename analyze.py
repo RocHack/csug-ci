@@ -105,6 +105,38 @@ def parse_user(f, prev, datum):
     line = read_line(f)
     user['threads'] = int(line)
     line = read_line(f)
+    n_thread_procs = int(line)
+    user['thread_procs'] = []
+    for i in range(n_thread_procs):
+        line = read_line(f)
+        array = ' '.split(line)
+        user['thread_procs'].append({
+            'n_threads': int(array[0]),
+            'secs': int(array[1]),
+            'cmd': ' '.join(array[2:])
+        })
+    line = read_line(f)
+    n_cpu_procs = int(line)
+    user['cpu_procs'] = []
+    for i in range(n_cpu_procs):
+        line = read_line(f)
+        array = ' '.split(line)
+        user['cpu_procs'].append({
+            'avg_cpu': int(array[0]),
+            'secs': int(array[1]),
+            'cmd': ' '.join(array[2:])
+        })
+    line = read_line(f)
+    n_mem_procs = int(line)
+    user['mem_procs'] = []
+    for i in range(n_mem_procs):
+        line = read_line(f)
+        array = ' '.split(line)
+        user['mem_procs'].append({
+            'mem_usage': int(array[0]),
+            'secs': int(array[1]),
+            'cmd': ' '.join(array[2:])
+        })
     datum['users'][username] = user
 
 def parse_computer(f, prev, datum):
