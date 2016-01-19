@@ -192,6 +192,9 @@ def compress_computer(computer, f):
 
 def cmd_compress(info):
     for computer in info['computers']:
+        if computer not in info['files']:
+            print("Computer", computer, "does not exist.", file=sys.stderr)
+            sys.exit(1)
         compress_computer(computer, info['files'][computer])
 
 def exec_cmd(cmd, info):
