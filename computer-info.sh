@@ -82,7 +82,9 @@ mem_avail()
 
 user_logins()
 {
-    who | awk '$1 == "'$1'" {print $2}' | sort -u | tr '\n' ' '
+    local logins
+    logins="$(who | awk '$1 == "'$1'" {print $2}' | sort -u)"
+    echo $logins
 }
 
 user_lock_programs()
