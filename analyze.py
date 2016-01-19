@@ -4,6 +4,7 @@ import os
 import sys
 import fnmatch
 from decimal import Decimal
+from pprint import pprint
 
 # Based on http://stackoverflow.com/questions/1724693/find-a-file-in-python
 def find(pattern, path):
@@ -189,6 +190,7 @@ def load_all(f):
 
 def compress_computer(computer, f):
     data = load_all(f)
+    pprint(data)
 
 def cmd_compress(info):
     for computer in info['computers']:
