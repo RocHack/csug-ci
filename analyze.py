@@ -121,7 +121,7 @@ def parse_user(f, prev, datum):
         line = read_line(f)
         array = split_on_space(line)
         user['cpu_procs'].append({
-            'avg_cpu': int(array[0]),
+            'avg_cpu': Decimal(array[0]),
             'secs': int(array[1]),
             'cmd': ' '.join(array[2:])
         })
