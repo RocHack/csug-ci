@@ -33,6 +33,8 @@ def parse_args(argv):
         files[computer] = f
         i += 2
 
+    if i >= argc:
+        usage(None, 1)
     cmd = argv[i]
     if cmd == "--help" or cmd == "-h":
         usage(None, 0)
