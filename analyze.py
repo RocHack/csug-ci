@@ -190,7 +190,6 @@ def load_all(f):
 
 def compress_computer(computer, f):
     data = load_all(f)
-    pprint(data)
 
 def cmd_compress(info):
     for computer in info['computers']:
@@ -199,9 +198,25 @@ def cmd_compress(info):
             sys.exit(1)
         compress_computer(computer, info['files'][computer])
 
+def dump(computer, f):
+    data = load_all(f)
+    pprint(data)
+
+def cmd_dump(info):
+    for computer in info['computers']:
+        if computer not in info['files']:
+            print("Computer", computer, "does not exist.", file=sys.stderr)
+            sys.exit(1)
+        dump(computer, info['files'][computer])
+
 def exec_cmd(cmd, info):
     if cmd == "compress":
         cmd_compress(info)
+    elif cmd == "dump":
+        cmd_dump(info)
+    else:
+        print("Command", cmd, "not recognized.", file=sys.stderr)
+        sys.exit(1)
 
 def main():
     return
