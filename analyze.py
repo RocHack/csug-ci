@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import time
 import os
 import sys
 import fnmatch
@@ -14,10 +13,6 @@ def find(pattern, path):
             if fnmatch.fnmatch(name, pattern):
                 results.append(os.path.join(root, name))
     return results
-
-def concat_files(machine):
-    files = map(lambda f: f[:-5], files)
-    files.sort()
 
 def usage(cmd, status=None):
     if cmd is None:
@@ -43,7 +38,7 @@ def parse_args(argv):
         usage(None, 0)
     i += 1
 
-    info = { 'computers': [], 'files': files }
+    info = {'computers': [], 'files': files}
     while i < argc:
         arg = argv[i]
         i += 1
@@ -148,7 +143,8 @@ def parse_computer(f, prev, datum):
     datum['uptime'] = int(line)
     line = read_line(f)
     loads = ' '.split(line)
-    datum['load_avgs'] = (Decimal(loads[0]), Decimal(loads[1]), Decimal(loads[2]))
+    datum['load_avgs'] = (Decimal(loads[0]), Decimal(loads[1]),
+            Decimal(loads[2]))
     line = read_line(f)
     datum['avail_mem'] = int(line)
     line = read_line(f)
@@ -185,7 +181,7 @@ def load_start_end(f, start, end):
             prev = datum
 
 def load_all(f):
-    return load_from_until(f, lambda x: True, lambda x: False)
+    return load_start_end(f, lambda x: True, lambda x: False)
 
 def compress_computer(computer, f):
     data = load_all(f)
