@@ -61,6 +61,9 @@ def read_line(f, allow_blank=True):
         return None
     return line.strip()
 
+def split_on_space(line):
+    return [x for x in line.split(' ') if x != '']
+
 pgrm_map = {
     '0': 'chrome',
     '1': 'firefox',
@@ -78,7 +81,7 @@ pgrm_map = {
 
 def parse_interesting_pgrms(f, user):
     line = read_line(f)
-    user['pgrms'] = map(lambda x: pgrm_map[x], line.split(' '))
+    user['pgrms'] = list(map(lambda x: pgrm_map[x], split_on_space(line)))
 
 def parse_user(f, prev, datum):
     user = {}
@@ -90,9 +93,9 @@ def parse_user(f, prev, datum):
         user = prev['users'][username]
         datum['users'][username] = user
         return
-    user['logins'] = line.split(' ')
+    user['logins'] = split_on_space(line)
     line = read_line(f)
-    user['screensavers'] = line.split(' ')
+    user['screensavers'] = split_on_space(line)
     line = read_line(f)
     user['zombies'] = int(line)
     parse_interesting_pgrms(f, user)
@@ -105,7 +108,7 @@ def parse_user(f, prev, datum):
     user['thread_procs'] = []
     for i in range(n_thread_procs):
         line = read_line(f)
-        array = line.split(' ')
+        array = split_on_space(line)
         user['thread_procs'].append({
             'n_threads': int(array[0]),
             'secs': int(array[1]),
@@ -116,7 +119,7 @@ def parse_user(f, prev, datum):
     user['cpu_procs'] = []
     for i in range(n_cpu_procs):
         line = read_line(f)
-        array = line.split(' ')
+        array = split_on_space(line)
         user['cpu_procs'].append({
             'avg_cpu': int(array[0]),
             'secs': int(array[1]),
@@ -127,7 +130,7 @@ def parse_user(f, prev, datum):
     user['mem_procs'] = []
     for i in range(n_mem_procs):
         line = read_line(f)
-        array = line.split(' ')
+        array = split_on_space(line)
         user['mem_procs'].append({
             'mem_usage': int(array[0]),
             'secs': int(array[1]),
@@ -143,7 +146,7 @@ def parse_computer(f, prev, datum):
     line = read_line(f)
     datum['uptime'] = int(line)
     line = read_line(f)
-    loads = line.split(' ')
+    loads = split_on_space(line)
     datum['load_avgs'] = (Decimal(loads[0]), Decimal(loads[1]),
             Decimal(loads[2]))
     line = read_line(f)
